@@ -1,49 +1,36 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2005-2007 Alexander Wemmer
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-///////////////////////////////////////////////////////////////////////////////
-
 /*! \file    logger.h
-    \author  Alexander Wemmer, alex@wemmer.at
+    \author  aleos <aleos@flightstudio.ru>
 */
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef __LOGGER_H
+#define __LOGGER_H
 
+#include <QDebug>
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
 #include <QObject>
 #include <QDateTime>
-#include <windows.h>
+//#include <windows.h>
 
-#include "assert.h"
+//#include "assert.h"
 
-/////////////////////////////////////////////////////////////////////////////
-#if (defined _MSC_VER )
-//#define _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_DEPRECATE
-#endif
+//#if (defined _MSC_VER )
+////#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_DEPRECATE
+//#endif
 
 //! Logger
 class Logger  : public QObject
 {
     Q_OBJECT
+
+protected:
+
+    static Logger* m_logger;
+
+    QFile* m_logfile;
+    QTextStream* m_logfilestream;
 
 public:
 
@@ -52,7 +39,7 @@ public:
         if (m_logger == 0)
         {
             m_logger = new Logger;
-//            MYASSERT(m_logger != 0);
+            //            MYASSERT(m_logger != 0);
         }
 
         return m_logger;
@@ -65,19 +52,22 @@ public:
     }
 
     //! logs to console and file
-    static void log(const QString& text,bool console_only = false) { getLogger()->logText(text,console_only); }
-
-    static int printf(const char* fmt,...)
+    static void log(const QString& text,bool console_only = false)
     {
-    	va_list args;
-   	    va_start(args,fmt);
-   	    char _buf[0x1000];
-   	    DWORD dwWritten;
-		dwWritten=vsprintf_s(_buf, 0x1000, fmt, args);
-   	    WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),_buf,dwWritten,&dwWritten,NULL);
-   	    return (int)dwWritten;
-
+        getLogger()->logText(text,console_only);
     }
+
+//    static int printf(const char* fmt,...)
+//    {
+//        char* args;
+//        va_start(args,fmt);
+//        char _buf[0x1000];
+//        unsigned long dwWritten;
+//        dwWritten=vsprintf_s(_buf, 0x1000, fmt, args);
+//        WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),_buf,dwWritten,&dwWritten,NULL);
+//        return (int)dwWritten;
+//    }
+
 
     //! logs to file only
     static void logToFileOnly(const QString& text) { getLogger()->logTextToFileOnly(text); }
@@ -95,13 +85,6 @@ signals:
 
     void signalLogging(const QString& text);
 
-protected:
-
-    static Logger* m_logger;
-
-    QFile* m_logfile;
-    QTextStream* m_logfilestream;
-
 private:
     //! Hidden copy-constructor
     Logger(const Logger&);
@@ -109,7 +92,5 @@ private:
     const Logger& operator = (const Logger&);
 };
 
-#endif /* LOGGER_H */
-
-// End of file
+#endif /* __LOGGER_H */
 

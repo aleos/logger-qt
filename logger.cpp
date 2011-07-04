@@ -1,33 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2005-2007 Alexander Wemmer 
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-///////////////////////////////////////////////////////////////////////////////
-
-/*! \file    logger.cpp
-    \author  Alexander Wemmer, alex@wemmer.at
+/*! \file    logger.h
+    \author  aleos <aleos@flightstudio.ru>
 */
 
-//#include <execinfo.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-
-//#include <QMessageBox>
 #include "logger.h"
+#include <iostream>
 
 Logger* Logger::m_logger = 0;
 
@@ -81,7 +57,10 @@ void Logger::logText(const QString& text,bool console_only)
     QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss:zzz")).arg(text);
     
     // write out the text
-    printf("%s\n", logtext.toLatin1().data());
+//    printf("%s\n", logtext.toLatin1().data());
+    QTextStream logToConsole(stdout);
+    logToConsole << logtext << "\n";
+
     fflush(stdout);
     
     // write the text to the logfile

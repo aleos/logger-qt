@@ -26,6 +26,7 @@
 // #include <stdio.h>
 // #include <stdlib.h>
 
+//#include <QMessageBox>
 #include "logger.h"
 
 Logger* Logger::m_logger = 0;
@@ -53,24 +54,24 @@ Logger::~Logger()
 
 void Logger::setLogFile(const QString& logfilename)
 {
-    MYASSERT(!logfilename.isEmpty());
+//    MYASSERT(!logfilename.isEmpty());
     if (m_logfile != 0) delete m_logfile;
     if (m_logfilestream != 0) delete m_logfilestream;
     
     m_logfile = new QFile(logfilename);
-    MYASSERT(m_logfile != 0);
+//    MYASSERT(m_logfile != 0);
     if (!m_logfile->open(QIODevice::WriteOnly))
     {
 #if! VASFMC_GAUGE
-        QMessageBox::critical(0, "LOGFILE", QString("Could not open logfile (%1)").arg(logfilename));
-        MYASSERT(false);
+//        QMessageBox::critical(0, "LOGFILE", QString("Could not open logfile (%1)").arg(logfilename));
+//        MYASSERT(false);
 #endif
     }
-    MYASSERT(m_logfile->isWritable());
-    MYASSERT(m_logfile->resize(0));
+//    MYASSERT(m_logfile->isWritable());
+//    MYASSERT(m_logfile->resize(0));
     
     m_logfilestream = new QTextStream(m_logfile);
-    MYASSERT(m_logfilestream != 0);
+//    MYASSERT(m_logfilestream != 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////

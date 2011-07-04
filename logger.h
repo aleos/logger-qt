@@ -25,7 +25,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <QMessageBox>
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
@@ -53,7 +52,7 @@ public:
         if (m_logger == 0)
         {
             m_logger = new Logger;
-            MYASSERT(m_logger != 0);
+//            MYASSERT(m_logger != 0);
         }
 
         return m_logger;

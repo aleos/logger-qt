@@ -27,34 +27,31 @@ class Logger  : public QObject
 
 protected:
 
-    static Logger* m_logger;
+    static Logger* logger;
 
-    QFile* m_logfile;
-    QTextStream* m_logfilestream;
+    QFile* file;
+    QTextStream* filestream;
 
 public:
 
     static Logger* getLogger()
     {
-        if (m_logger == 0)
-        {
-            m_logger = new Logger;
-            //            MYASSERT(m_logger != 0);
-        }
+        if (logger == 0)
+            logger = new Logger;
 
-        return m_logger;
+        return logger;
     }
 
     static void finish()
     {
         delete getLogger();
-        m_logger = 0;
+        logger = 0;
     }
 
     //! logs to console and file
-    static void log(const QString& text,bool console_only = false)
+    static void log(const QString& text, bool isConsoleOnly = false)
     {
-        getLogger()->logText(text,console_only);
+        getLogger()->logText(text, isConsoleOnly);
     }
 
 //    static int printf(const char* fmt,...)
@@ -68,9 +65,11 @@ public:
 //        return (int)dwWritten;
 //    }
 
-
     //! logs to file only
-    static void logToFileOnly(const QString& text) { getLogger()->logTextToFileOnly(text); }
+    static void logToFileOnly(const QString& text)
+    {
+        getLogger()->logTextToFileOnly(text);
+    }
 
     //-----
 
@@ -78,7 +77,7 @@ public:
     virtual ~Logger();
 
     void setLogFile(const QString& logfilename);
-    void logText(const QString& text,bool console_only = false);
+    void logText(const QString& text, bool console_only = false);
     void logTextToFileOnly(const QString& text);
 
 signals:

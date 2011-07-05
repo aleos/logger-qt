@@ -27,9 +27,10 @@ void Logger::setLogFile(const QString& logfilename)
     if (filestream != 0) delete filestream;
     
     file = new QFile(logfilename);
+    streamFile.open(logfilename.toLatin1().data());
     if (!file->open(QIODevice::WriteOnly))
     {
-        qDebug() << "File not opened!";
+//        qDebug() << "File not opened!";
     }
 
     file->resize(0);
@@ -37,9 +38,8 @@ void Logger::setLogFile(const QString& logfilename)
 }
 
 void Logger::logText(const QString& text, bool console_only)
-{
-//    QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss:zzz")).arg(text);
-    QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("mm:ss:zzz")).arg(text);
+{/*
+    QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss:zzz")).arg(text);
 
     QTextStream terminal(stdout);
     terminal << logtext << endl;
@@ -51,6 +51,11 @@ void Logger::logText(const QString& text, bool console_only)
 //    filestream->flush();
     
     emit signalLogging(logtext);
+*/
+    std::string logtext(text.toLatin1().data());
+    std::cout << logtext;
+    if (!console_only && streamFile != 0) streamFile << logtext;
+    streamFile.flush();
 }
 
 void Logger::logTextToFileOnly(const QString& text)

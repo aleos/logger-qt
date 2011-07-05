@@ -5,6 +5,9 @@
 #ifndef __LOGGER_H
 #define __LOGGER_H
 
+#include <iostream>
+#include <fstream>
+
 #include <QDebug>
 #include <QStringList>
 #include <QFile>
@@ -30,6 +33,7 @@ protected:
     static Logger* logger;
 
     QFile* file;
+    std::ofstream streamFile;
     QTextStream* filestream;
 
 public:

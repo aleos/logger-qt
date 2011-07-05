@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     Logger logger;
     logger.setLogFile("Logger.log");
-    logger.logText("12345");
+    logger.logText("sdfsdfsdfsdfsdfs");
 
     return a.exec();
 }

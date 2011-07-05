@@ -32,9 +32,7 @@ protected:
 
     static Logger* logger;
 
-    QFile* file;
-    std::ofstream streamFile;
-    QTextStream* filestream;
+    std::ofstream file;
 
 public:
 
@@ -55,7 +53,7 @@ public:
     //! logs to console and file
     static void log(const QString& text, bool isConsoleOnly = false)
     {
-        getLogger()->logText(text, isConsoleOnly);
+        getLogger()->logText(text.toLatin1().data(), isConsoleOnly);
     }
 
 //    static int printf(const char* fmt,...)
@@ -81,8 +79,10 @@ public:
     virtual ~Logger();
 
     void setLogFile(const QString& logfilename);
-    void logText(const QString& text, bool console_only = false);
+    void logText(const char* logText, bool consoleOnly = false);
+    void logText(const QString& logText, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
+
 
 signals:
 

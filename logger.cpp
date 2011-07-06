@@ -34,13 +34,24 @@ Logger::~Logger()
 ////    getLogger()->file.open(logfilename.toAscii().data());
 //}
 
-void Logger::logText(const char* logFileName, const char* logtext, bool consoleOnly)
+void Logger::logText(char* logFileName, char* logtext, bool consoleOnly)
 {
+    // Write to a terminal (standart output)
     std::cout << logtext << std::endl;
 
-    if (!consoleOnly && file != 0) {
-        *files[0] << logtext << std::endl;
-        *files[0] << "logtext" << std::endl;
+    // Write to a file if !consoleOnly
+    if (!consoleOnly) {
+        filesMap::iterator iterator = files.begin();
+        iterator = files.find(logFileName);
+        std::ofstream *logFileStream = NULL;
+        if (iterator != files.end()) {
+            logFileStream = iterator->second;
+        } else {
+            std::ofstream *fileStream = new std::ofstream(logFileName);
+            files.insert(filesMapPair(logFileName, fileStream));
+        }
+        *logFileStream << logtext << "\n";
+        logFileStream->flush();
     }
 }
 

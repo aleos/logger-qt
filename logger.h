@@ -26,8 +26,8 @@ private:
         OnlyOne(){}
 };
 
-typedef std::map<int, std::ofstream*> filesMap;
-typedef std::pair<int, std::ofstream*> filesMapPair;
+typedef std::map<char*, std::ofstream*> filesMap;
+typedef std::pair<char*, std::ofstream*> filesMapPair;
 
 //! Logger
 class Logger  : public QObject
@@ -38,7 +38,7 @@ protected:
 
     static Logger* logger;
 
-    static std::ofstream stdLogFile;
+    std::ofstream stdLogFile;
     filesMap files;
     char *commonLogFileName;
 
@@ -84,7 +84,7 @@ private:
         if (logger == 0) {
             logger = new Logger;
             logger->commonLogFileName = "logger.log";
-            logger->files.insert(filesMapPair(0, new std::ofstream("logger.txt")));
+            logger->files.insert(filesMapPair(logger->commonLogFileName, new std::ofstream(logger->commonLogFileName)));
         }
 
         return logger;
@@ -92,7 +92,7 @@ private:
 
     void logText(const QString &logFileName, const QString& text, bool isConsoleOnly = false);
     void logText(const QString& text, bool isConsoleOnly = false);
-    void logText(const char* logFileName, const char* logText, bool consoleOnly = false);
+    void logText(char* logFileName, char* logText, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
 };
 

@@ -1,5 +1,4 @@
 #include <QtCore/QCoreApplication>
-#include <QTextCodec>
 
 #include "logger.h"
 

@@ -8,10 +8,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <QDebug>
-#include <QStringList>
-#include <QFile>
-#include <QTextStream>
 #include <QObject>
 #include <QDateTime>
 #include <map>
@@ -30,6 +26,9 @@ private:
         OnlyOne(){}
 };
 
+typedef std::map<int, std::ofstream*> filesMap;
+typedef std::pair<int, std::ofstream*> filesMapPair;
+
 //! Logger
 class Logger  : public QObject
 {
@@ -40,23 +39,14 @@ protected:
     static Logger* logger;
 
     static std::ofstream stdLogFile;
-    std::map<int, std::ofstream*> files;
+    filesMap files;
+    char *commonLogFileName;
 
     std::ofstream file;
 
 public:
 
     Logger(const Logger&);
-
-    static Logger* getLogger()
-    {
-        if (logger == 0) {
-            logger = new Logger;
-            logger->files.insert(std::pair<int, std::ofstream*>(0, new std::ofstream("logger.txt")));
-        }
-
-        return logger;
-    }
 
 //    static void addLogFile(const int id, const QString& logfilename);
 
@@ -88,6 +78,17 @@ private:
 
     Logger();
     virtual ~Logger();
+
+    static Logger* getLogger()
+    {
+        if (logger == 0) {
+            logger = new Logger;
+            logger->commonLogFileName = "logger.log";
+            logger->files.insert(filesMapPair(0, new std::ofstream("logger.txt")));
+        }
+
+        return logger;
+    }
 
     void logText(const QString &logFileName, const QString& text, bool isConsoleOnly = false);
     void logText(const QString& text, bool isConsoleOnly = false);

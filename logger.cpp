@@ -19,53 +19,41 @@ Logger::~Logger()
 {
 //    delete filestream;
 //    filestream = 0;
-    file.flush();
-//    delete file;
-//    file = 0;
 }
 
-//void Logger::addLogFile(const int id, const QString& logfilename)
-//{
-//    Logger *log = getLogger();
-//    std::ostringstream strstream;
-//    strstream << id;
-//    std::string filename = strstream.str();
-//    log->files.insert(std::pair<int, std::ofstream*>(id, new std::ofstream(filename.data())));
-////    getLogger()->file.open(logfilename.toAscii().data());
-//}
-
-void Logger::logText(char* logFileName, char* logtext, bool consoleOnly)
+void Logger::logText(char* logFileName, char* logMessage, bool consoleOnly)
 {
     // Write to a terminal (standart output)
-    std::cout << logtext << std::endl;
+    std::cout << logMessage << std::endl;
 
-    // Write to a file if !consoleOnly
+    // Write to a file if not to write on console only
     if (!consoleOnly) {
         filesMap::iterator iterator = files.begin();
         iterator = files.find(logFileName);
         std::ofstream *logFileStream = NULL;
-        if (iterator != files.end()) {
+        if (iterator != files.end()) {  // Good. Get pointer to file stream
             logFileStream = iterator->second;
-        } else {
+        } else {    // No file present in map of files. Create one.
             std::ofstream *fileStream = new std::ofstream(logFileName);
             files.insert(filesMapPair(logFileName, fileStream));
         }
-        *logFileStream << logtext << "\n";
+        *logFileStream << logMessage << "\n";
         logFileStream->flush();
     }
 }
 
-void Logger::logText(const QString &logtext, bool consoleOnly)
+void Logger::logText(const QString &logMessage, bool consoleOnly)
 {
-    logText(commonLogFileName, logtext.toAscii().data(), consoleOnly);
+    logText(commonLogFileName, logMessage.toAscii().data(), consoleOnly);
 }
 
-void Logger::logText(const QString &logFileName, const QString &logText, bool consoleOnly)
+void Logger::logText(const QString &logFileName, const QString &logMessage, bool consoleOnly)
 {
-//    Logger *log = getLogger();
+//    int id;
 //    std::ostringstream strstream;
 //    strstream << id;
-
+//    std::string str = strstream.str();
+    logText(logFileName.toAscii().data(), logMessage.toAscii().data(), consoleOnly);
 }
 
 void Logger::logTextToFileOnly(const QString& text)

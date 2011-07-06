@@ -90,9 +90,9 @@ private:
         return logger;
     }
 
-    void logText(const QString &logFileName, const QString& text, bool isConsoleOnly = false);
-    void logText(const QString& text, bool isConsoleOnly = false);
-    void logText(char* logFileName, char* logText, bool consoleOnly = false);
+    void logText(const QString &logFileName, const QString& logMessage, bool isConsoleOnly = false);
+    void logText(const QString& logMessage, bool isConsoleOnly = false);
+    void logText(char* logFileName, char* logMessage, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
 };
 

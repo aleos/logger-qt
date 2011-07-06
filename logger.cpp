@@ -44,16 +44,17 @@ void Logger::logText(const char* logFileName, const char* logtext, bool consoleO
     }
 }
 
-void Logger::logText(const QString& logtext, bool consoleOnly)
+void Logger::logText(const QString &logtext, bool consoleOnly)
 {
-    logText(logtext.toAscii().data(), consoleOnly);
+    logText(commonLogFileName, logtext.toAscii().data(), consoleOnly);
 }
 
-void Logger::logText(const QString logFileName, const QString &logText, bool consoleOnly)
+void Logger::logText(const QString &logFileName, const QString &logText, bool consoleOnly)
 {
-    Logger *log = getLogger();
-    std::ostringstream strstream;
-    strstream << id;
+//    Logger *log = getLogger();
+//    std::ostringstream strstream;
+//    strstream << id;
+
 }
 
 void Logger::logTextToFileOnly(const QString& text)

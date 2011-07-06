@@ -23,11 +23,11 @@ int main(int argc, char *argv[])
 //    *iter->second << "lskjdf";
 //    iter->second->close();
 
-    std::ofstream f("qwe.txt");
-    f << "hi" << "\n";
-    f.flush();
-    f << "hello" << "\n";
-    f.flush();
+//    std::ofstream f("qwe.txt");
+//    f << "hi" << "\n";
+//    f.flush();
+//    f << "hello" << "\n";
+//    f.flush();
 
 
     return a.exec();

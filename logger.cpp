@@ -3,8 +3,11 @@
 */
 
 #include "logger.h"
+#include <sstream>
 
-Logger* Logger::logger = 0;
+OnlyOne* OnlyOne::theSingleInstance=NULL;
+
+Logger* Logger::logger = NULL;
 
 Logger::Logger()
 {
@@ -21,49 +24,36 @@ Logger::~Logger()
 //    file = 0;
 }
 
-void Logger::setLogFile(const QString& logfilename)
+//void Logger::addLogFile(const int id, const QString& logfilename)
+//{
+//    Logger *log = getLogger();
+//    std::ostringstream strstream;
+//    strstream << id;
+//    std::string filename = strstream.str();
+//    log->files.insert(std::pair<int, std::ofstream*>(id, new std::ofstream(filename.data())));
+////    getLogger()->file.open(logfilename.toAscii().data());
+//}
+
+void Logger::logText(const char* logFileName, const char* logtext, bool consoleOnly)
 {
-//    if (file != 0) delete file;
-//    if (filestream != 0) delete filestream;
-    
-//    file = new QFile(logfilename);
-    file.open(logfilename.toLatin1().data());
-//    if (!file->open(QIODevice::WriteOnly))
-//    {
-////        qDebug() << "File not opened!";
-//    }
+    std::cout << logtext << std::endl;
 
-//    file->resize(0);
-//    filestream = new QTextStream(file);
-}
-
-void Logger::logText(const char* logtext, bool consoleOnly)
-{/*
-    QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss:zzz")).arg(text);
-
-    QTextStream terminal(stdout);
-    terminal << logtext << endl;
-//    terminal.flush();
-//    fflush(stdout);
-    
-    // write the text to the logfile
-    if (!console_only && filestream != 0) *filestream << logtext << endl;
-//    filestream->flush();
-    
-    emit signalLogging(logtext);
-*/
-//    std::string logtext(text.toLatin1().data());
-    std::cout << logtext;
-    if (!consoleOnly && file != 0) file << logtext;
-    file.flush();
+    if (!consoleOnly && file != 0) {
+        *files[0] << logtext << std::endl;
+        *files[0] << "logtext" << std::endl;
+    }
 }
 
 void Logger::logText(const QString& logtext, bool consoleOnly)
 {
-    std::string stdstr = logtext.toLatin1().data();
-    std::cout << stdstr;
-    if (!consoleOnly && file != 0) file << stdstr;
-    file.flush();
+    logText(logtext.toAscii().data(), consoleOnly);
+}
+
+void Logger::logText(const QString logFileName, const QString &logText, bool consoleOnly)
+{
+    Logger *log = getLogger();
+    std::ostringstream strstream;
+    strstream << id;
 }
 
 void Logger::logTextToFileOnly(const QString& text)

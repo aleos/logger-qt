@@ -14,14 +14,21 @@
 #include <QTextStream>
 #include <QObject>
 #include <QDateTime>
-//#include <windows.h>
+#include <map>
 
-//#include "assert.h"
-
-//#if (defined _MSC_VER )
-////#define _CRT_SECURE_NO_WARNINGS
-//#define _CRT_SECURE_NO_DEPRECATE
-//#endif
+class OnlyOne
+{
+public:
+        static OnlyOne* Instance()
+        {
+                if(theSingleInstance==NULL)
+                        theSingleInstance=new OnlyOne;
+                return theSingleInstance;
+        }
+private:
+        static OnlyOne* theSingleInstance;
+        OnlyOne(){}
+};
 
 //! Logger
 class Logger  : public QObject
@@ -32,17 +39,26 @@ protected:
 
     static Logger* logger;
 
+    static std::ofstream stdLogFile;
+    std::map<int, std::ofstream*> files;
+
     std::ofstream file;
 
 public:
 
+    Logger(const Logger&);
+
     static Logger* getLogger()
     {
-        if (logger == 0)
+        if (logger == 0) {
             logger = new Logger;
+            logger->files.insert(std::pair<int, std::ofstream*>(0, new std::ofstream("logger.txt")));
+        }
 
         return logger;
     }
+
+//    static void addLogFile(const int id, const QString& logfilename);
 
     static void finish()
     {
@@ -51,21 +67,16 @@ public:
     }
 
     //! logs to console and file
-    static void log(const QString& text, bool isConsoleOnly = false)
+    static void log(const QString &logFileName, const QString& text, bool isConsoleOnly = false)
     {
-        getLogger()->logText(text.toLatin1().data(), isConsoleOnly);
+        getLogger()->logText(logFileName, text, isConsoleOnly);
     }
 
-//    static int printf(const char* fmt,...)
-//    {
-//        char* args;
-//        va_start(args,fmt);
-//        char _buf[0x1000];
-//        unsigned long dwWritten;
-//        dwWritten=vsprintf_s(_buf, 0x1000, fmt, args);
-//        WriteFile(GetStdHandle(STD_OUTPUT_HANDLE),_buf,dwWritten,&dwWritten,NULL);
-//        return (int)dwWritten;
-//    }
+    static void log(const QString& text, bool isConsoleOnly = false)
+    {
+        getLogger()->logText(text, isConsoleOnly);
+    }
+
 
     //! logs to file only
     static void logToFileOnly(const QString& text)
@@ -73,26 +84,15 @@ public:
         getLogger()->logTextToFileOnly(text);
     }
 
-    //-----
+private:
 
     Logger();
     virtual ~Logger();
 
-    void setLogFile(const QString& logfilename);
-    void logText(const char* logText, bool consoleOnly = false);
-    void logText(const QString& logText, bool consoleOnly = false);
+    void logText(const QString &logFileName, const QString& text, bool isConsoleOnly = false);
+    void logText(const QString& text, bool isConsoleOnly = false);
+    void logText(const char* logFileName, const char* logText, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
-
-
-signals:
-
-    void signalLogging(const QString& text);
-
-private:
-    //! Hidden copy-constructor
-    Logger(const Logger&);
-    //! Hidden assignment operator
-    const Logger& operator = (const Logger&);
 };
 
 #endif /* __LOGGER_H */

@@ -3,12 +3,10 @@
 */
 
 #include <sstream>
-#include <QMutex>
 #include "flogger.h"
 #include "loggerdumper.h"
 
 #include <QTime>
-#include <QDebug>
 
 //OnlyOne* OnlyOne::theSingleInstance=NULL;
 
@@ -28,6 +26,7 @@ FLogger::FLogger()
     connect(&dumper, SIGNAL(dump()), SLOT(write()));
     dumper.start();
     workTime.start();
+    startTime = time(NULL);
 }
 
 FLogger::~FLogger()
@@ -48,8 +47,11 @@ void FLogger::write(void)
         std::list<Message>::iterator messagesIterator = messages.begin();
         std::list<Message>::iterator messagesEndIterator = messages.end();
         while (messagesIterator != messagesEndIterator) {
+            time_t currentTime = time(NULL);
+            double timeDiff = (double)clock() / CLOCKS_PER_SEC; //difftime(currentTime, startTime);
+            clock_t t;
             if (messagesIterator->writeToTerminal) { // Write to a terminal (standart output)
-                std::cout << messagesIterator->message << std::endl;
+                std::cout << messagesIterator->message << ' ' << timeDiff << "sec" << std::endl;
             }
             if (messagesIterator->writeToFile) { // Write to a file if not to write on console only
                 filesIterator = files.find(messagesIterator->logname);
@@ -59,7 +61,7 @@ void FLogger::write(void)
                     logFileStream = new std::ofstream(messagesIterator->logname.data());
                     files.insert(filesMapPair(messagesIterator->logname, logFileStream));
                 }
-                *logFileStream << messagesIterator->message << "\n";
+                *logFileStream << messagesIterator->message << ' ' << timeDiff << "sec" << "\n";
                 ++messagesIterator;
             }
             logFileStream->flush();
@@ -67,11 +69,9 @@ void FLogger::write(void)
 
 //        messagesIterator = messages.begin();    // return messages iterator to begin
         // Lock for erasing messages from list of messages
-//        QMutex mutex;
-//        mutex.lock();
+        mutex.lock();
         messages.erase(messages.begin(), messagesEndIterator);
-//        mutex.unlock();
-        qDebug() << workTime.elapsed();
+        mutex.unlock();
     }
 }
 

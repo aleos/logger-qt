@@ -9,6 +9,9 @@
 #include <fstream>
 #include <map>
 #include <QDateTime>
+#include <QObject>
+
+#include "loggerdumper.h"
 
 //class OnlyOne
 //{
@@ -24,8 +27,8 @@
 //        OnlyOne(){}
 //};
 
-typedef std::map<const char *, std::ofstream*> filesMap;
-typedef std::pair<const char *, std::ofstream*> filesMapPair;
+typedef std::map<std::string, std::ofstream*> filesMap;
+typedef std::pair<std::string, std::ofstream*> filesMapPair;
 
 //! Logger
 class FLogger  : public QObject
@@ -34,16 +37,17 @@ class FLogger  : public QObject
 
 protected:
 
-    static FLogger* logger;
+    static FLogger *logger;
+    LoggerDumper dumper;
 
     filesMap files;
-    const char *commonLogFileName;
+    std::string commonLogFileName;
 
     struct Message
     {
-        Message(const char *message, const char *logname, bool writeToTerminal, bool writeToFile);
-        const char *message;
-        const char *logname;
+        Message(std::string message, std::string logname, bool writeToTerminal, bool writeToFile);
+        std::string message;
+        std::string logname;
         bool writeToTerminal;
         bool writeToFile;
     };
@@ -63,7 +67,7 @@ public:
     }
 
     //! logs to console and file
-    static void log(const QString &logFileName, const QString& text, bool isConsoleOnly = false)
+    static void log(const QString &logFileName, const QString &text, bool isConsoleOnly = false)
     {
         getLogger()->logText(logFileName, text, isConsoleOnly);
     }
@@ -79,8 +83,6 @@ public:
         getLogger()->logTextToFileOnly(text);
     }
 
-    void write(void);
-
 private:
 
     FLogger();
@@ -91,16 +93,19 @@ private:
         if (logger == NULL) {
             logger = new FLogger;
             logger->commonLogFileName = "log.txt";
-            logger->files.insert(filesMapPair(logger->commonLogFileName, new std::ofstream(logger->commonLogFileName)));
+            logger->files.insert(filesMapPair(logger->commonLogFileName, new std::ofstream(logger->commonLogFileName.data())));
         }
 
         return logger;
     }
 
     void logText(const QString &logFileName, const QString& logMessage, bool isConsoleOnly = false);
-    void logText(const QString& logMessage, bool isConsoleOnly = false);
-    void logText(const char* logFileName, const char* logMessage, bool consoleOnly = false);
+    void logText(const QString &logMessage, bool isConsoleOnly = false);
+    void logText(const std::string &logFileName, const std::string &logMessage, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
+
+public slots:
+    void write(void);
 };
 
 #endif /* __LOGGER_H */

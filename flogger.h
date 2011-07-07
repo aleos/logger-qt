@@ -13,20 +13,6 @@
 
 #include "loggerdumper.h"
 
-//class OnlyOne
-//{
-//public:
-//        static OnlyOne* Instance()
-//        {
-//                if(theSingleInstance==NULL)
-//                        theSingleInstance=new OnlyOne;
-//                return theSingleInstance;
-//        }
-//private:
-//        static OnlyOne* theSingleInstance;
-//        OnlyOne(){}
-//};
-
 typedef std::map<std::string, std::ofstream*> filesMap;
 typedef std::pair<std::string, std::ofstream*> filesMapPair;
 

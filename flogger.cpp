@@ -2,26 +2,27 @@
     \author  aleos <aleos@flightstudio.ru>
 */
 
-#include "logger.h"
+#include "flogger.h"
 #include <sstream>
 
-OnlyOne* OnlyOne::theSingleInstance=NULL;
+//OnlyOne* OnlyOne::theSingleInstance=NULL;
 
-Logger* Logger::logger = NULL;
+FLogger* FLogger::logger = NULL;
 
-Logger::Logger()
+FLogger::FLogger()
 {
-//    streamFile = NULL;
-//    filestream = 0;
 }
 
-Logger::~Logger() 
+FLogger::~FLogger()
 {
-//    delete filestream;
-//    filestream = 0;
+    filesMap::iterator iterator;
+    for (iterator = files.begin(); iterator != files.end(); ++iterator) {
+        delete iterator->second;
+        files.erase(iterator);
+    }
 }
 
-void Logger::logText(char* logFileName, char* logMessage, bool consoleOnly)
+void FLogger::logText(const char* logFileName, const char* logMessage, bool consoleOnly)
 {
     // Write to a terminal (standart output)
     std::cout << logMessage << std::endl;
@@ -42,12 +43,12 @@ void Logger::logText(char* logFileName, char* logMessage, bool consoleOnly)
     }
 }
 
-void Logger::logText(const QString &logMessage, bool consoleOnly)
+void FLogger::logText(const QString &logMessage, bool consoleOnly)
 {
     logText(commonLogFileName, logMessage.toAscii().data(), consoleOnly);
 }
 
-void Logger::logText(const QString &logFileName, const QString &logMessage, bool consoleOnly)
+void FLogger::logText(const QString &logFileName, const QString &logMessage, bool consoleOnly)
 {
 //    int id;
 //    std::ostringstream strstream;
@@ -56,12 +57,10 @@ void Logger::logText(const QString &logFileName, const QString &logMessage, bool
     logText(logFileName.toAscii().data(), logMessage.toAscii().data(), consoleOnly);
 }
 
-void Logger::logTextToFileOnly(const QString& text)
+void FLogger::logTextToFileOnly(const QString& text)
 {
     QString logtext = QString("%1: %2").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss:zzz")).arg(text);
     
-    // write the text to the logfile
-//    if (filestream != 0) filestream << logtext << endl;
 }
 
 // End of file

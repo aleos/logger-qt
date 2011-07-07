@@ -16,7 +16,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    logger.cpp
+    flogger.cpp
 
 HEADERS += \
-    logger.h
+    flogger.h

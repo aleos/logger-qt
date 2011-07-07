@@ -1,15 +1,15 @@
 #include <QtCore/QCoreApplication>
 
-#include "logger.h"
+#include "flogger.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
 //    Logger::addLogFile(1, "vasya.txt");
-    Logger::log("hi");
-    Logger::log("hello");
-    Logger::log("end");
+    FLogger::log("hi");
+    FLogger::log("hello");
+    FLogger::log("end");
 
 
 

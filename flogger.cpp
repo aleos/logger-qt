@@ -28,7 +28,7 @@ FLogger::~FLogger()
     }
 }
 
-void FLogger::write()
+void FLogger::write(void)
 {
     Message *message = &messages.front();
     const char *logMessage = messages.front().message;

@@ -24,8 +24,8 @@
 //        OnlyOne(){}
 //};
 
-typedef std::map<const char*, std::ofstream*> filesMap;
-typedef std::pair<const char*, std::ofstream*> filesMapPair;
+typedef std::map<const char *, std::ofstream*> filesMap;
+typedef std::pair<const char *, std::ofstream*> filesMapPair;
 
 //! Logger
 class FLogger  : public QObject
@@ -39,6 +39,16 @@ protected:
     filesMap files;
     const char *commonLogFileName;
 
+    struct Message
+    {
+        Message(const char *message, const char *logname, bool writeToTerminal, bool writeToFile);
+        const char *message;
+        const char *logname;
+        bool writeToTerminal;
+        bool writeToFile;
+    };
+
+    std::list<Message> messages;
 
 public:
 
@@ -79,7 +89,7 @@ private:
     {
         if (logger == NULL) {
             logger = new FLogger;
-            logger->commonLogFileName = "logger.log";
+            logger->commonLogFileName = "log.txt";
             logger->files.insert(filesMapPair(logger->commonLogFileName, new std::ofstream(logger->commonLogFileName)));
         }
 
@@ -90,6 +100,8 @@ private:
     void logText(const QString& logMessage, bool isConsoleOnly = false);
     void logText(const char* logFileName, const char* logMessage, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
+
+    void write();
 };
 
 #endif /* __LOGGER_H */

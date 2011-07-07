@@ -6,9 +6,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-//    Logger::addLogFile(1, "vasya.txt");
     FLogger::log("hi");
-    FLogger::log("hello");
+    FLogger::log("hello.log", QString("hello"));
     FLogger::log("end");
 
 

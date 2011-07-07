@@ -2,7 +2,6 @@
 #define LOGGERDUMPER_H
 
 #include <QThread>
-#include "flogger.h"
 
 class LoggerDumper : public QThread
 {
@@ -10,10 +9,16 @@ class LoggerDumper : public QThread
 public:
     explicit LoggerDumper(QObject *parent = 0);
 
+    void run(void);
+
 signals:
+    void dump(void);
 
 public slots:
-
+    void slotDump()
+    {
+        emit dump();
+    }
 };
 
 #endif // LOGGERDUMPER_H

@@ -2,8 +2,9 @@
     \author  aleos <aleos@flightstudio.ru>
 */
 
-#include "flogger.h"
 #include <sstream>
+#include <QMutex>
+#include "flogger.h"
 
 //OnlyOne* OnlyOne::theSingleInstance=NULL;
 
@@ -33,22 +34,26 @@ void FLogger::write()
     const char *logMessage = messages.front().message;
     // Write to a terminal (standart output)
     std::cout << logMessage << std::endl;
-    messages.pop_front();
 
-//    // Write to a file if not to write on console only
-//    if (!consoleOnly) {
-//        filesMap::iterator iterator = files.begin();
-//        iterator = files.find(logFileName);
-//        std::ofstream *logFileStream = NULL;
-//        if (iterator != files.end()) {  // Good. Get pointer to file stream
-//            logFileStream = iterator->second;
-//        } else {    // No file present in map of files. Create one.
-//            std::ofstream *fileStream = new std::ofstream(logFileName);
-//            files.insert(filesMapPair(logFileName, fileStream));
-//        }
-//        *logFileStream << logMessage << "\n";
-//        logFileStream->flush();
-//    }
+    // Write to a file if not to write on console only
+    if (message->writeToFile) {
+        filesMap::iterator iterator;
+        iterator = files.find(message->logname);
+        std::ofstream *logFileStream = NULL;
+        if (iterator != files.end()) {  // Good. Get pointer to file stream
+            logFileStream = iterator->second;
+        } else {    // No file present in map of files. Create one.
+            std::ofstream *logFileStream = new std::ofstream(message->logname);
+            files.insert(filesMapPair(message->logname, logFileStream));
+        }
+        *logFileStream << logMessage << "\n";
+        logFileStream->flush();
+    }
+    // Lock for erasing messages from list of messages
+    QMutex mutex;
+    mutex.lock();
+    messages.pop_front();
+    mutex.unlock();
 }
 
 void FLogger::logText(const char* logFileName, const char* logMessage, bool consoleOnly)

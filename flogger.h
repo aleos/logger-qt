@@ -73,12 +73,13 @@ public:
         getLogger()->logText(text, isConsoleOnly);
     }
 
-
     //! logs to file only
     static void logToFileOnly(const QString& text)
     {
         getLogger()->logTextToFileOnly(text);
     }
+
+    void write(void);
 
 private:
 
@@ -100,8 +101,6 @@ private:
     void logText(const QString& logMessage, bool isConsoleOnly = false);
     void logText(const char* logFileName, const char* logMessage, bool consoleOnly = false);
     void logTextToFileOnly(const QString& text);
-
-    void write();
 };
 
 #endif /* __LOGGER_H */

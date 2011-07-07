@@ -10,6 +10,8 @@
 #include <map>
 #include <QDateTime>
 #include <QObject>
+#include <QMutex>
+#include <ctime>
 
 #include "loggerdumper.h"
 
@@ -26,6 +28,9 @@ protected:
     static FLogger *logger;
     LoggerDumper dumper;
     QTime workTime;
+    time_t startTime;
+
+    QMutex mutex;
 
     filesMap files;
     std::string commonLogFileName;

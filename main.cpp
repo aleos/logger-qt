@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     FLogger::log("end");
 
 
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 10000000; i++) {
         FLogger::log(QString("%1").arg(i));
     }
 

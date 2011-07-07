@@ -25,6 +25,7 @@ protected:
 
     static FLogger *logger;
     LoggerDumper dumper;
+    QTime workTime;
 
     filesMap files;
     std::string commonLogFileName;

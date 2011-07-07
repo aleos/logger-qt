@@ -7,7 +7,8 @@
 #include "flogger.h"
 #include "loggerdumper.h"
 
-#include <QTimer>
+#include <QTime>
+#include <QDebug>
 
 //OnlyOne* OnlyOne::theSingleInstance=NULL;
 
@@ -26,6 +27,7 @@ FLogger::FLogger()
 {
     connect(&dumper, SIGNAL(dump()), SLOT(write()));
     dumper.start();
+    workTime.start();
 }
 
 FLogger::~FLogger()
@@ -69,6 +71,7 @@ void FLogger::write(void)
 //        mutex.lock();
         messages.erase(messages.begin(), messagesEndIterator);
 //        mutex.unlock();
+        qDebug() << workTime.elapsed();
     }
 }
 
@@ -80,7 +83,11 @@ void FLogger::logText(const std::string &logFileName, const std::string &logMess
 
 void FLogger::logText(const QString &logMessage, bool consoleOnly)
 {
-    logText(commonLogFileName, logMessage.toAscii().data(), consoleOnly);
+    std::ostringstream strstream;
+    strstream << workTime.elapsed();
+    std::string message = strstream.str();
+
+    logText(commonLogFileName, message + "msec " + logMessage.toAscii().data(), consoleOnly);
 }
 
 void FLogger::logText(const QString &logFileName, const QString &logMessage, bool consoleOnly)

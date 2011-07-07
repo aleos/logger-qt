@@ -40,40 +40,40 @@ FLogger::~FLogger()
 void FLogger::write(void)
 {
     if (messages.size() > 0) {
-        Message *message = &messages.front();
-        std::string logMessage = message->message;
-        std::string logFileName = message->logname;
-        if (message->writeToTerminal) {
-            // Write to a terminal (standart output)
-            std::cout << logMessage << std::endl;
-        }
-        // Write to a file if not to write on console only
-        if (message->writeToFile) {
-            filesMap::iterator filesIterator;
-            std::ofstream *logFileStream = NULL;
+        filesMap::iterator filesIterator;
+        std::ofstream *logFileStream = NULL;
 
-            filesIterator = files.find(message->logname);
-            if (filesIterator != files.end()) {  // Good. Get pointer to file stream
-                logFileStream = filesIterator->second;
-            } else {    // No file present in map of files. Create one.
-                logFileStream = new std::ofstream(logFileName.data());
-                files.insert(filesMapPair(logFileName, logFileStream));
+        std::list<Message>::iterator messagesIterator = messages.begin();
+        std::list<Message>::iterator messagesEndIterator = messages.end();
+        while (messagesIterator != messagesEndIterator) {
+            if (messagesIterator->writeToTerminal) { // Write to a terminal (standart output)
+                std::cout << messagesIterator->message << std::endl;
             }
-            *logFileStream << logMessage << "\n";
-
+            if (messagesIterator->writeToFile) { // Write to a file if not to write on console only
+                filesIterator = files.find(messagesIterator->logname);
+                if (filesIterator != files.end()) {  // Good. Get pointer to file stream
+                    logFileStream = filesIterator->second;
+                } else {    // No file present in map of files. Create one.
+                    logFileStream = new std::ofstream(messagesIterator->logname.data());
+                    files.insert(filesMapPair(messagesIterator->logname, logFileStream));
+                }
+                *logFileStream << messagesIterator->message << "\n";
+                ++messagesIterator;
+            }
             logFileStream->flush();
         }
+
+//        messagesIterator = messages.begin();    // return messages iterator to begin
         // Lock for erasing messages from list of messages
-        QMutex mutex;
-        mutex.lock();
-        messages.pop_front();
-        mutex.unlock();
+//        QMutex mutex;
+//        mutex.lock();
+        messages.erase(messages.begin(), messagesEndIterator);
+//        mutex.unlock();
     }
 }
 
 void FLogger::logText(const std::string &logFileName, const std::string &logMessage, bool consoleOnly)
 {
-    messages.push_back(Message(logMessage, logFileName, true, true));
     messages.push_back(Message(logMessage, logFileName, true, true));
 //    write();
 }

@@ -20,7 +20,7 @@ private:
     FilesMap *files;
     std::list<Message> *messages;
 
-    QMutex removeMessagesLocker;
+    QMutex writeLocker;
 
     void write(void);
 };

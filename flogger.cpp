@@ -7,8 +7,7 @@
 
 Message::Message(std::string message, std::string logname, bool writeToTerminal, bool writeToFile):
     message(message), logname(logname), writeToTerminal(writeToTerminal), writeToFile(writeToFile)
-{
-}
+{ }
 
 FLogger* FLogger::logger = NULL;
 

@@ -9,7 +9,6 @@
 #include <map>
 #include <QMutex>
 #include <QObject>
-#include <ctime>
 
 typedef std::map<std::string, std::ofstream*> FilesMap;
 typedef std::pair<std::string, std::ofstream*> FilesMapPair;
@@ -46,8 +45,6 @@ protected:
 public:
 
     FLogger(const FLogger&);
-
-//    static void addLogFile(const int id, const QString& logfilename);
 
     static void finish()
     {

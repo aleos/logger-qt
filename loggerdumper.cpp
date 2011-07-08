@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
 #include <QMutex>
 #include "loggerdumper.h"
 
@@ -12,9 +13,9 @@ LoggerDumper::~LoggerDumper(void) { }
 void LoggerDumper::run()
 {
     while (isRun) {
-        removeMessagesLocker.lock();
+        writeLocker.lock();
         write();
-        removeMessagesLocker.unlock();
+        writeLocker.unlock();
         msleep(50);
     }
 //    exec();

@@ -2,23 +2,27 @@
 #define LOGGERDUMPER_H
 
 #include <QThread>
+#include "flogger.h"
 
 class LoggerDumper : public QThread
 {
     Q_OBJECT
 public:
-    explicit LoggerDumper(QObject *parent = 0);
+//    explicit LoggerDumper(QObject *parent = 0);
+    LoggerDumper(bool *isRun, std::string *commonLogFileName, FilesMap *files, std::list<Message> *messages);
+    ~LoggerDumper(void);
 
     void run(void);
 
-signals:
-    void dump(void);
+private:
+    bool *isRun;
+    std::string *commonLogFileName;
+    FilesMap *files;
+    std::list<Message> *messages;
 
-public slots:
-    void slotDump()
-    {
-        emit dump();
-    }
+    QMutex removeMessagesLocker;
+
+    void write(void);
 };
 
 #endif // LOGGERDUMPER_H

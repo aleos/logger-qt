@@ -25,6 +25,7 @@ FLogger::~FLogger()
         delete iterator->second;
         files.erase(iterator);
     }
+    isWriteRun = false; // Stop thread which write to terminal and files.
     delete dumper;
 }
 

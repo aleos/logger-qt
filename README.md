@@ -1,0 +1,2 @@
+# logger-qt
+Asynchronous logger
